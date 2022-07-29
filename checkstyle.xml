@@ -1,0 +1,243 @@
+<?xml version="1.0"?>
+<!DOCTYPE module PUBLIC
+        "-//Checkstyle//DTD Checkstyle Configuration 1.3//EN"
+        "https://checkstyle.org/dtds/configuration_1_3.dtd">
+
+<!--
+
+  Checkstyle configuration that checks the sun coding conventions from:
+
+    - the Java Language Specification at
+      https://docs.oracle.com/javase/specs/jls/se11/html/index.html
+
+    - the Sun Code Conventions at https://www.oracle.com/technetwork/java/codeconvtoc-136057.html
+
+    - the Javadoc guidelines at
+      https://www.oracle.com/technetwork/java/javase/documentation/index-137868.html
+
+    - the JDK Api documentation https://docs.oracle.com/en/java/javase/11/
+
+    - some best practices
+
+-->
+
+<module name="Checker">
+
+    <!-- INCLUDING ONLY JAVA FILES TO BE ANALYSED -->
+    <property name="fileExtensions" value="java"/>
+
+    <!-- Checks that a package-info.java file exists for each package.     -->
+    <!-- See http://checkstyle.sourceforge.net/config_javadoc.html#JavadocPackage -->
+    <!-- EXCLUDING PACKAGE-INFO REQUIRING DOCS -->
+    <!-- <module name="JavadocPackage"/> -->
+
+    <!-- Checks whether files end with a new line.                        -->
+    <!-- See http://checkstyle.sourceforge.net/config_misc.html#NewlineAtEndOfFile -->
+    <!-- EXCLUDING NEW LINE AT END OF FILE -->
+    <!--<module name="NewlineAtEndOfFile"/>-->
+
+    <!-- Checks that property files contain the same keys.         -->
+    <!-- See http://checkstyle.sourceforge.net/config_misc.html#Translation -->
+    <module name="Translation"/>
+
+    <!-- Checks for Size Violations.                    -->
+    <!-- See http://checkstyle.sourceforge.net/config_sizes.html -->
+    <module name="FileLength"/>
+
+    <!-- Checks for whitespace                               -->
+    <!-- See http://checkstyle.sourceforge.net/config_whitespace.html -->
+    <!--<module name="FileTabCharacter"/>-->
+
+    <!-- Miscellaneous other checks.                   -->
+    <!-- See http://checkstyle.sourceforge.net/config_misc.html -->
+    <module name="RegexpSingleline">
+        <property name="format" value="$."/>
+        <property name="minimum" value="0"/>
+        <property name="maximum" value="0"/>
+        <property name="message" value="Line has illegal trailing characters."/>
+    </module>
+
+    <module name="TreeWalker">
+
+        <!-- Checks for Javadoc comments.                     -->
+        <!-- See http://checkstyle.sourceforge.net/config_javadoc.html -->
+        <!-- INCLUDING ONLY PUBLIC METHODS REQUIRE JAVADOC AND -->
+        <!--<module name="JavadocMethod">
+            <property name="allowMissingPropertyJavadoc" value="true"/>
+            <property name="allowThrowsTagsForSubclasses" value="true"/>
+            <property name="scope" value="public"/>
+        </module>-->
+
+        <!-- EXCLUDING VARIABLE AND CONSTANT LEVEL JAVA DOC -->
+        <!--<module name="JavadocVariable"/>-->
+
+        <!-- EXCLUDING CLASS AND ENUM REQUIRED JAVADOC AS SHOULD BE CLEAR BY NAME -->
+        <module name="JavadocType">
+            <property name="tokens" value="INTERFACE_DEF, ANNOTATION_DEF"/>
+        </module>
+
+        <module name="JavadocStyle">
+            <property name="excludeScope" value="private"/>
+        </module>
+
+        <!-- Checks for Naming Conventions.                  -->
+        <!-- See http://checkstyle.sourceforge.net/config_naming.html -->
+        <!-- EXCLUDING CONSTANT NAME REQUIREMENTS AS THIS IS ALSO EXCESSIVE -->
+        <!--<module name="ConstantName"></module>-->
+
+        <!--<module name="LocalFinalVariableName"/>-->
+        <module name="LocalVariableName"/>
+        <module name="MemberName"/>
+        <module name="PackageName"/>
+        <module name="ParameterName">
+            <property name="ignoreOverridden" value="true"/>
+        </module>
+        <module name="StaticVariableName"/>
+        <module name="TypeName"/>
+
+        <!-- Checks for imports                              -->
+        <!-- See http://checkstyle.sourceforge.net/config_imports.html -->
+        <!-- ALLOWING STATIC AND STAR IMPORTS -->
+        <!--<module name="AvoidStarImport">-->
+        <!--<property name="allowClassImports" value="false"/>-->
+        <!--<property name="allowStaticMemberImports" value="false"/>-->
+        <!--</module>-->
+
+        <module name="IllegalImport"/> <!-- defaults to sun.* packages -->
+        <module name="RedundantImport"/>
+        <module name="UnusedImports"/>
+
+        <!-- Checks for Size Violations.                    -->
+        <!-- See http://checkstyle.sourceforge.net/config_sizes.html -->
+        <module name="LineLength">
+            <property name="max" value="350"/>
+        </module>
+        <module name="MethodLength">
+            <property name="max" value="1000"/>
+        </module>
+        <module name="MethodName"/>
+        <module name="ParameterNumber">
+            <property name="max" value="25"/>
+        </module>
+
+        <!-- Checks for whitespace                               -->
+        <!-- See http://checkstyle.sourceforge.net/config_whitespace.html -->
+        <module name="EmptyForIteratorPad"/>
+        <module name="GenericWhitespace"/>
+        <module name="MethodParamPad"/>
+
+        <!-- EXCLUDING WHITESPACE RULES -->
+        <!--<module name="NoWhitespaceAfter"/>-->
+        <!--<module name="NoWhitespaceBefore"/>-->
+
+        <module name="OperatorWrap"/>
+        <module name="ParenPad"/>
+
+        <!-- EXCLUDING TYPECASE PADDING -->
+        <!--<module name="TypecastParenPad">-->
+        <!--<property name="option" value="space"/>-->
+        <!--</module>-->
+
+        <module name="WhitespaceAfter"/>
+
+        <!-- ALLOWING EMPTY IN SOME CASES FOR PLACEHOLDERS -->
+        <module name="WhitespaceAround">
+            <property name="allowEmptyConstructors" value="true"/>
+            <property name="allowEmptyTypes" value="true"/>
+            <property name="allowEmptyCatches" value="true"/>
+            <property name="allowEmptyMethods" value="true"/>
+        </module>
+
+        <!-- Modifier Checks                                    -->
+        <!-- See http://checkstyle.sourceforge.net/config_modifiers.html -->
+        <!-- EXCLUDING MODIFIER ORDER AS THIS NEEDS TO BE AGREED UPON -->
+        <!--<module name="ModifierOrder"/>-->
+
+        <module name="RedundantModifier"/>
+
+        <!-- Checks for blocks. You know, those {}'s         -->
+        <!-- See http://checkstyle.sourceforge.net/config_blocks.html -->
+        <module name="AvoidNestedBlocks"/>
+        <module name="EmptyBlock"/>
+        <module name="LeftCurly"/>
+
+        <module name="NeedBraces">
+            <property name="allowSingleLineStatement" value="true"/>
+        </module>
+
+        <module name="RightCurly"/>
+
+        <!-- Checks for common coding problems               -->
+        <!-- See http://checkstyle.sourceforge.net/config_coding.html -->
+        <module name="EmptyStatement"/>
+
+        <!-- EXCLUDING EQUALS AND HASHCODE AS DOES NOT PLAY WITH LOMBOK -->
+        <!--<module name="EqualsHashCode"/>-->
+
+        <!-- INCLUDING THESE ADDITIONAL CHECKS -->
+        <module name="CovariantEquals"/>
+        <module name="DeclarationOrder"/>
+        <module name="EqualsAvoidNull"/>
+        <!--<module name="FinalLocalVariable"/>-->
+
+        <module name="HiddenField">
+            <property name="ignoreConstructorParameter" value="true"/>
+            <property name="ignoreSetter" value="true"/>
+            <property name="setterCanReturnItsClass" value="true"/>
+            <property name="ignoreAbstractMethods" value="true"/>
+        </module>
+
+        <!-- Checks for illegal instantiations where a factory method is preferred. -->
+        <!-- THIS SHOULD BE SPECIFIC TO EACH CODE BASE BEING USED. -->
+        <!--<module name="IllegalInstantiation"/>-->
+
+        <module name="InnerAssignment"/>
+
+        <!-- EXCLUDING MAGIC NUMBER -->
+        <!-- <module name="MagicNumber"/> -->
+
+        <!-- EXCLUDING DEFAULT IN SWITCH AS CODE SHOULD HANDLE ALL VALID CASES - MAYBE CHANGE THIS -->
+        <!--<module name="MissingSwitchDefault"/>-->
+
+        <module name="MultipleVariableDeclarations"/>
+        <module name="SimplifyBooleanExpression"/>
+        <module name="SimplifyBooleanReturn"/>
+
+        <!-- INCLUDING ADDITIONAL NESTED LOGIC LOOPS -->
+        <module name="NestedIfDepth">
+            <property name="max" value="4"/>
+        </module>
+        <module name="NestedForDepth">
+            <property name="max" value="4"/>
+        </module>
+
+        <module name="OverloadMethodsDeclarationOrder"/>
+        <module name="StringLiteralEquality"/>
+
+        <!-- Checks for class design                         -->
+        <!-- See http://checkstyle.sourceforge.net/config_design.html -->
+
+        <!-- EXCLUDING DESIGN FOR EXTENSION AS THIS IS DEFINITELY EXCESSIVE VALIDATION -->
+        <!--<module name="DesignForExtension"/>-->
+
+        <module name="FinalClass"/>
+        <module name="OneTopLevelClass"/>
+        <module name="InterfaceIsType"/>
+
+        <!-- ALLOWING IMMUTABLE FIELDS TO BE PUBLIC  -->
+        <module name="VisibilityModifier">
+            <property name="allowPublicImmutableFields" value="true"/>
+        </module>
+
+        <!-- Miscellaneous other checks.                   -->
+        <!-- See http://checkstyle.sourceforge.net/config_misc.html -->
+        <module name="ArrayTypeStyle"/>
+
+        <!--<module name="FinalParameters"/>-->
+
+        <!-- EXCLUDING AS SOMETIMES THIS IS NOT APPROPRIATE -->
+        <!--<module name="TodoComment"/>-->
+
+        <module name="UpperEll"/>
+    </module>
+</module>
