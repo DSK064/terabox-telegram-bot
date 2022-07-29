@@ -88,16 +88,16 @@ pipeline {
           sh "ci/omnia-adapter.sh"
       }
     }
-    stage ("fortify upload") {
+    // stage ("fortify upload") {
       
-      steps {
-        fortifyClean addJVMOptions: '-64', buildID: '$JOB_NAME', debug: true, logFile: '', maxHeap: '', verbose: true
-        fortifyTranslate addJVMOptions: '', buildID: '$JOB_NAME', excludeList: '**/src/test/**/*.java', logFile: './$JOB_NAME-translation.log', maxHeap: '', projectScanType: fortifyJava(javaAddOptions: '', javaClasspath: '', javaSrcFiles: '**/src/**/*.java', javaVersion: '1.8')
-        fortifyScan addJVMOptions: '-64', addOptions: '', buildID: '$JOB_NAME', customRulepacks: '', logFile: './$JOB_NAME-scan.log', maxHeap: '8000', resultsFile: './$JOB_NAME.fpr'
+      // steps {
+        // fortifyClean addJVMOptions: '-64', buildID: '$JOB_NAME', debug: true, logFile: '', maxHeap: '', verbose: true
+        // fortifyTranslate addJVMOptions: '', buildID: '$JOB_NAME', excludeList: '**/src/test/**/*.java', logFile: './$JOB_NAME-translation.log', maxHeap: '', projectScanType: fortifyJava(javaAddOptions: '', javaClasspath: '', javaSrcFiles: '**/src/**/*.java', javaVersion: '1.8')
+        // fortifyScan addJVMOptions: '-64', addOptions: '', buildID: '$JOB_NAME', customRulepacks: '', logFile: './$JOB_NAME-scan.log', maxHeap: '8000', resultsFile: './$JOB_NAME.fpr'
         //fortifyUpload appName: 'sampleapplication', appVersion: '1.0', failureCriteria: '[fortify priority order]:critical OR high', filterSet: '', pollingInterval: '', resultsFile: ''
         //fortifyUpload appName: 'sampleapplication', appVersion: 'sampleapplication', failureCriteria: '', filterSet: '', pollingInterval: '', resultsFile: './${JOB_NAME}-${BUILD_NUMBER}-results.fpr'
-        sh "ci/fortify.sh"
-      }
-    }
+       // sh "ci/fortify.sh"
+     // }
+   // }
   }
 }
