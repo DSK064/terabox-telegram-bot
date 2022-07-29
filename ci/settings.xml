@@ -1,0 +1,103 @@
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
+                      https://maven.apache.org/xsd/settings-1.0.0.xsd">
+
+    <servers>
+        <server>
+            <id>coral-nexus</id>
+            <username>${env.NEXUS_USR}</username>
+            <password>${env.NEXUS_PSW}</password>
+        </server>
+
+        <server>
+            <id>ladbrokescoral-releases</id>
+            <username>${env.ART_USR}</username>
+            <password>${env.ART_PSW}</password>
+        </server>
+        <server>
+            <id>ladbrokescoral-snapshots</id>
+            <username>${env.ART_USR}</username>
+            <password>${env.ART_PSW}</password>
+        </server>
+        <server>
+            <id>ladbrokescoral-omnia</id>
+            <username>${env.ART_USR}</username>
+            <password>${env.ART_PSW}</password>
+        </server>
+        <server>
+            <id>ladbrokescoral-omnia-snapshots</id>
+            <username>${env.ART_USR}</username>
+            <password>${env.ART_PSW}</password>
+        </server>
+        <server>
+            <id>ladbrokescoral-df</id>
+            <username>${env.ART_USR}</username>
+            <password>${env.ART_PSW}</password>
+        </server>
+        <server>
+            <id>ladbrokescoral-df-snapshots</id>
+            <username>${env.ART_USR}</username>
+            <password>${env.ART_PSW}</password>
+        </server>
+        <server>
+            <id>ladbrokescoral-sdm</id>
+            <username>${env.ART_USR}</username>
+            <password>${env.ART_PSW}</password>
+        </server>
+        <server>
+            <id>ladbrokescoral-sdm-snapshots</id>
+            <username>${env.ART_USR}</username>
+            <password>${env.ART_PSW}</password>
+        </server>
+
+    </servers>
+    <mirrors>
+        <mirror>
+            <!--This sends everything except those using localhost or file based repositories  to /public -->
+            <id>coral-nexus</id>
+            <mirrorOf>external:*</mirrorOf>
+            <url>http://nexus.coral-epos2.co.uk/content/groups/public/</url>
+        </mirror>
+    </mirrors>
+
+    <profiles>
+        <profile>
+            <id>coral-nexus</id>
+            <!--Enable snapshots for the built in central repo to direct -->
+            <!--all requests to nexus via the mirror -->
+            <repositories>
+                <repository>
+                    <id>central</id>
+                    <url>http://central</url>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                </repository>
+            </repositories>
+            <pluginRepositories>
+                <pluginRepository>
+                    <id>central</id>
+                    <url>http://central</url>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                </pluginRepository>
+            </pluginRepositories>
+        </profile>
+
+    </profiles>
+
+    <activeProfiles>
+        <!--make the profile active all the time -->
+        <activeProfile>coral-nexus</activeProfile>
+    </activeProfiles>
+
+
+</settings>
