@@ -4,7 +4,7 @@ pipeline {
   }
   tools {
     maven 'Maven_3.6.3'
-    jdk 'jdk-1.8.0'
+    jdk 'jdk11'
   }
 	options {
     buildDiscarder(logRotator(numToKeepStr: '10', artifactNumToKeepStr: '10'))
