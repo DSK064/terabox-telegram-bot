@@ -45,7 +45,7 @@ public class RetailConfigService {
             systemConfigResponses = Arrays.stream(response)
                     .map(object -> mapper.convertValue(object, FeatureConfigResponse.class))
                     .collect(Collectors.toList());
-            log.info("getFeatureConfigResponse from retail config service completed  with response {}", systemConfigResponses);
+            log.info("getFeatureConfigResponse from retail config service completed  with response ");
             return systemConfigResponses;
         } catch (WebClientResponseException wcre) {
             log.error("getFeatureConfigResponse from retail config service with error {} ", wcre.getResponseBodyAsString(), wcre);
