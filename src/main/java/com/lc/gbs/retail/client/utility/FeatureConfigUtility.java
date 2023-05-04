@@ -7,6 +7,8 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
@@ -75,6 +77,25 @@ public class FeatureConfigUtility {
         FeatureConfigResponse featureConfigResponse = getValue(featureKey, sessionType, brand, shopId);
         return featureConfigResponse != null && !featureConfigResponse.getValue().equalsIgnoreCase("N/A")
                 ? Long.valueOf(featureConfigResponse.getValue()) : null;
+    }
+
+    /**
+     * This utility method is to get threshold value configured for the ShopId and brand based on feature key and session type and exclusively used for NDP
+     * @param featureKey - requires feature key name from retail config service feature keys ex : ndp_add_funds_key etc..
+     * @param sessionType - requires Session type value ex : NDP (Anonymous,LoggedIn) , ALL
+     * @param brand - Brand name
+     * @param shopId - Shop Id
+     * @param triggerType - Trigger Type
+     * @return Feature Config response from retail config service
+     */
+    public Long getNumberConfig(String featureKey, String sessionType, String brand, String shopId, String triggerType) {
+        FeatureConfigResponse featureConfigResponse = getValue(featureKey, sessionType, brand, shopId);
+        if(featureConfigResponse != null && !featureConfigResponse.getValue().equalsIgnoreCase("N/A")){
+            String ndpTriggerFields = featureConfigResponse.getNdpTriggerField();
+            List<String> ndpTriggerFieldList = ndpTriggerFields != null ? Arrays.asList(ndpTriggerFields.split(",")) : Collections.emptyList();
+            return ndpTriggerFieldList.contains(triggerType) ? Long.valueOf(featureConfigResponse.getValue()) : null;
+        }
+        return null;
     }
 
 }

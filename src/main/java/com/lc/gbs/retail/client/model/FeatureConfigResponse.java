@@ -18,4 +18,5 @@ public class FeatureConfigResponse {
     private String isEnabled;
     private String value;
     private Set<String> shopIds;
+    private String ndpTriggerField;
 }
