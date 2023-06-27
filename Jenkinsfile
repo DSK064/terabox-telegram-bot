@@ -13,6 +13,9 @@ pipeline {
     ansiColor('xterm')
 
 	}
+    parameters {
+		booleanParam(defaultValue: false, description: 'Do you want to do a sonar scan code quality?', name: 'codeQuality')
+	}
 
   environment {
       //ART = credentials("jfrog-jenkins-user")

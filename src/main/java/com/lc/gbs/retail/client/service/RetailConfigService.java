@@ -1,23 +1,23 @@
 package com.lc.gbs.retail.client.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lc.gbs.retail.client.model.FeatureConfigResponse;
+import lombok.Data;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import org.springframework.web.util.UriComponentsBuilder;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
+@Data
 public class RetailConfigService {
 
     private static final Logger log = LogManager.getLogger(RetailConfigService.class);
@@ -39,12 +39,8 @@ public class RetailConfigService {
         try {
             UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(retailConfigServiceUrl);
             log.info("getFeatureConfigResponse from retail config service started with endpoint = {}", retailConfigServiceUrl);
-            Object[] response = webClient.get().uri(builder.build().toUri()).header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE).accept(MediaType.APPLICATION_JSON)
-                    .retrieve().bodyToMono(Object[].class).block();
-            ObjectMapper mapper = new ObjectMapper();
-            systemConfigResponses = Arrays.stream(response)
-                    .map(object -> mapper.convertValue(object, FeatureConfigResponse.class))
-                    .collect(Collectors.toList());
+            systemConfigResponses = webClient.get().uri(builder.build().toUri()).header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE).accept(MediaType.APPLICATION_JSON)
+                    .retrieve().bodyToMono(new ParameterizedTypeReference<List<FeatureConfigResponse>>() {}).block();
             log.info("getFeatureConfigResponse from retail config service completed  with response ");
             return systemConfigResponses;
         } catch (WebClientResponseException wcre) {

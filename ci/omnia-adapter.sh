@@ -24,7 +24,7 @@ for publishable in `jq -r '.deploy[].name' $manifest` ; do
   ci/update-manifest.py $manifest $publishable $container
 done
 
-curl -u ${ARTIFACTORY_USR}:${ARTIFACTORY_PSW} -X PUT "https://artifactory.bwinparty.corp/artifactory/lcggbs-rpm-local/apps-manifests/services/$JOB_NAME/$version.json" -T manifest.json
+sudo curl -u ${ARTIFACTORY_USR}:${ARTIFACTORY_PSW} -X PUT "https://artifactory.bwinparty.corp/artifactory/lcggbs-rpm-local/apps-manifests/services/$JOB_NAME/$version.json" -T manifest.json
 
 
 

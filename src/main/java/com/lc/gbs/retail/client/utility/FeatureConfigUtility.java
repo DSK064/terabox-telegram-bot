@@ -90,9 +90,11 @@ public class FeatureConfigUtility {
      */
     public Long getNumberConfig(String featureKey, String sessionType, String brand, String shopId, String triggerType) {
         FeatureConfigResponse featureConfigResponse = getValue(featureKey, sessionType, brand, shopId);
-        if(featureConfigResponse != null && !featureConfigResponse.getValue().equalsIgnoreCase("N/A")){
+        if (featureConfigResponse != null && !featureConfigResponse.getValue().equalsIgnoreCase("N/A")) {
             String ndpTriggerFields = featureConfigResponse.getNdpTriggerField();
             List<String> ndpTriggerFieldList = ndpTriggerFields != null ? Arrays.asList(ndpTriggerFields.split(",")) : Collections.emptyList();
+            log.info("Feature config client : NDP trigger value for shop {}, brand {}, featureKey {}, ndpTriggerFieldList {}, wallet transaction type {}",
+                    shopId, brand, featureKey, ndpTriggerFieldList, triggerType);
             return ndpTriggerFieldList.contains(triggerType) ? Long.valueOf(featureConfigResponse.getValue()) : null;
         }
         return null;
