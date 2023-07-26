@@ -1,7 +1,7 @@
 #! /bin/sh
+docker login -u ${ARTIFACTORY_USR} -p ${ARTIFACTORY_PSW} lcgomnia-docker-local.dev.docker.env.works
 mvn -version
-mvn -Djava.io.tmpdir=/data/jenkins/tmp/builds clean verify -U -s ci/gbs-settings.xml -Dhttp.nonProxyHosts="artifactory.bwinparty.corp|*.ladbrokescoral.com|bitbucket.org" -DproxySet=true -DproxyHost=infrastructure-proxy.gib1.egalacoral.com -DproxyPort=3128
-
+mvn -Djava.io.tmpdir=/data/jenkins/tmp/builds clean deploy -U -s ci/gbs-settings.xml -Dhttp.nonProxyHosts="artifactory.bwinparty.corp|*.ladbrokescoral.com|bitbucket.org" -DproxySet=true -DproxyHost=infrastructure-proxy.gib1.egalacoral.com -DproxyPort=3128
 if [ "$codeQuality" == "true" ];then
     echo "Running sonar scan as user selected"
     mkdir test-results
