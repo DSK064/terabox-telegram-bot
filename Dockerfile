@@ -20,6 +20,6 @@
 
 FROM lcgomnia-docker-local.dev.docker.env.works/base-images/maven-service-appd
 ARG APP=example
-ARG VERSION=0.0.1
+ARG VERSION=0.0.2
 ADD target/${APP}-${VERSION}-SNAPSHOT.jar  app.jar
 ENV NEW_RELIC_APP_NAME LC-CRE-DO-EXAMPLE-DEV

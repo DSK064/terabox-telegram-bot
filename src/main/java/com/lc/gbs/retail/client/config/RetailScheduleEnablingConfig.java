@@ -7,4 +7,4 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 @Configuration
 @ConditionalOnProperty(name = "enable.featureconfig.shoplist.cache.scheduling", matchIfMissing = false)
-public class ScheduleEnablingConfig {}
+public class RetailScheduleEnablingConfig {}

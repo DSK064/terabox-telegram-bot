@@ -33,7 +33,7 @@ public class RetailConfigService {
      * Based on parent scheduler cron job value this cache get refreshed and get updated from retail service
      * @return List of feature config responses
      */
-    @Cacheable(value = "configCache")
+    @Cacheable(value = "configCache", cacheManager = "retailCacheManager")
     public List<FeatureConfigResponse> getFeatureConfigResponse() {
         List<FeatureConfigResponse> systemConfigResponses = null;
         try {

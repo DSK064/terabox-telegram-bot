@@ -18,7 +18,7 @@ public class FeatureConfigCache {
     private static final Logger log = LogManager.getLogger(FeatureConfigCache.class);
 
     @Autowired
-    private CacheManager cacheManager;
+    private CacheManager retailCacheManager;
 
     @Autowired
     private RetailConfigService retailConfigService;
@@ -41,11 +41,11 @@ public class FeatureConfigCache {
      *  @param cacheToDelete specific cache to delete
      */
     public void evictCachedFeatureData(List<String> cacheToDelete) {
-        final Collection<String> totalCaches = cacheManager.getCacheNames();
+        final Collection<String> totalCaches = retailCacheManager.getCacheNames();
         if (totalCaches.size() > 0) {
             log.info("Entering to evictAllCaches with cache size {}", totalCaches.size());
             totalCaches.forEach(specificCache -> {
-                final Cache cache = cacheManager.getCache(specificCache);
+                final Cache cache = retailCacheManager.getCache(specificCache);
                 final String cacheName = cache != null ? cache.getName() : "";
                 log.info("Entering to evictAllCaches for {} ", cacheName);
                 if (cache != null && cacheToDelete.contains(cacheName)) {

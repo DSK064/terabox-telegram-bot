@@ -30,7 +30,7 @@ public class FeatureConfigUtility {
      * @return Feature Config response from retail config service
      */
     private FeatureConfigResponse getValue(String featureKey, String sessionType, String brand, String shopId) {
-        log.info("Calling getFeatureEnabledResponse with {}, {}, {}, {}", featureKey, sessionType, brand, shopId);
+        log.info("Calling getValue with {}, {}, {}, {}", featureKey, sessionType, brand, shopId);
         List<FeatureConfigResponse> featureConfigResponses = retailConfigService.getFeatureConfigResponse();
         if (!featureConfigResponses.isEmpty()) {
             AtomicReference<FeatureConfigResponse> featureConfigFinalResponse = new AtomicReference<>(featureConfigResponses.stream().filter(featureConfigResponse ->
@@ -47,10 +47,10 @@ public class FeatureConfigUtility {
                             featureConfigFinalResponse.set(featureConfigResponse);
                         }
                     });
-            return featureConfigFinalResponse.get();
         }
         return null;
     }
+
 
     /**
      * This utility method is to check feature is enabled or not for the ShopId and brand based on feature key and session type
