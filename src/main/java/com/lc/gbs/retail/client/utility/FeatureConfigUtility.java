@@ -47,6 +47,7 @@ public class FeatureConfigUtility {
                             featureConfigFinalResponse.set(featureConfigResponse);
                         }
                     });
+            return featureConfigFinalResponse.get();
         }
         return null;
     }
