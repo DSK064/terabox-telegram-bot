@@ -6,6 +6,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -32,7 +33,7 @@ public class FeatureConfigUtility {
     private FeatureConfigResponse getValue(String featureKey, String sessionType, String brand, String shopId) {
         log.info("Calling getValue with {}, {}, {}, {}", featureKey, sessionType, brand, shopId);
         List<FeatureConfigResponse> featureConfigResponses = retailConfigService.getFeatureConfigResponse();
-        if (!featureConfigResponses.isEmpty()) {
+        if (!CollectionUtils.isEmpty(featureConfigResponses)) {
             AtomicReference<FeatureConfigResponse> featureConfigFinalResponse = new AtomicReference<>(featureConfigResponses.stream().filter(featureConfigResponse ->
                             featureConfigResponse.getBrand().equalsIgnoreCase("ALL")
                                     && featureConfigResponse.getFeatureKey().equalsIgnoreCase(featureKey))
