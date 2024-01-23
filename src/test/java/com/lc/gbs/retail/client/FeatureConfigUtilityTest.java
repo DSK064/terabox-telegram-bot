@@ -3,12 +3,10 @@ package com.lc.gbs.retail.client;
 import com.lc.gbs.retail.client.model.FeatureConfigResponse;
 import com.lc.gbs.retail.client.service.RetailConfigService;
 import com.lc.gbs.retail.client.utility.FeatureConfigUtility;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
@@ -17,6 +15,7 @@ import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -42,6 +41,15 @@ public class FeatureConfigUtilityTest {
         assertEquals(300,featureConfigUtility.getNumberConfig("ndp_funds_key","Anonymous","LADBROKEUK","1005"));
         assertEquals(null,featureConfigUtility.getNumberConfig("ndp_funds_key","Anonymous","LADBROKEUK","1001","Physical Cash"));
         assertEquals(150,featureConfigUtility.getNumberConfig("ndp_funds_key","Anonymous","LADBROKEUK","2004","Physical Cash"));
+    }
+
+    @Test
+    public void testCheckForBatchPolling() {
+        List<FeatureConfigResponse> featureConfigResponseList = getMockFeatureConfigs();
+        featureConfigResponseList.get(0).setFeatureKey("live_balance_alert_time");
+        featureConfigResponseList.get(1).setFeatureKey("live_balance_alert_time");
+        when(retailConfigService.getFeatureConfigResponse()).thenReturn(featureConfigResponseList);
+        assertTrue(featureConfigUtility.checkFeatureEnable("live_balance_alert_time"));
     }
 
     private List<FeatureConfigResponse> getMockFeatureConfigs() {

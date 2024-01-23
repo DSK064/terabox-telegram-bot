@@ -11,6 +11,7 @@ import org.springframework.util.CollectionUtils;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
@@ -34,21 +35,24 @@ public class FeatureConfigUtility {
         log.info("Calling getValue with {}, {}, {}, {}", featureKey, sessionType, brand, shopId);
         List<FeatureConfigResponse> featureConfigResponses = retailConfigService.getFeatureConfigResponse();
         if (!CollectionUtils.isEmpty(featureConfigResponses)) {
-            AtomicReference<FeatureConfigResponse> featureConfigFinalResponse = new AtomicReference<>(featureConfigResponses.stream().filter(featureConfigResponse ->
+            List<FeatureConfigResponse> configResponses = featureConfigResponses.stream().filter(featureConfigResponse ->
                             featureConfigResponse.getBrand().equalsIgnoreCase("ALL")
-                                    && featureConfigResponse.getFeatureKey().equalsIgnoreCase(featureKey))
-                    .collect(Collectors.toList()).get(0));
-            featureConfigResponses.stream().filter(featureConfigResponse ->
-                            !featureConfigResponse.getBrand().equalsIgnoreCase("ALL")
-                                    && featureConfigResponse.getFeatureKey().equalsIgnoreCase(featureKey)
-                                    && featureConfigResponse.getSessionType().equalsIgnoreCase(sessionType)
-                                    && featureConfigResponse.getBrand().equalsIgnoreCase(brand))
-                    .forEach(featureConfigResponse -> {
-                        if (featureConfigResponse.getShopIds().contains(shopId)) {
-                            featureConfigFinalResponse.set(featureConfigResponse);
-                        }
-                    });
-            return featureConfigFinalResponse.get();
+                            && featureConfigResponse.getFeatureKey().equalsIgnoreCase(featureKey)).collect(Collectors.toList());
+            if (!CollectionUtils.isEmpty(configResponses)) {
+                AtomicReference<FeatureConfigResponse> featureConfigFinalResponse = new AtomicReference<>(configResponses.get(0));
+                featureConfigResponses.stream().filter(featureConfigResponse ->
+                        !featureConfigResponse.getBrand().equalsIgnoreCase("ALL")
+                                && featureConfigResponse.getFeatureKey().equalsIgnoreCase(featureKey)
+                                && featureConfigResponse.getSessionType().equalsIgnoreCase(sessionType)
+                                && featureConfigResponse.getBrand().equalsIgnoreCase(brand))
+                        .forEach(featureConfigResponse -> {
+                            if (featureConfigResponse.getShopIds().contains(shopId)) {
+                                featureConfigFinalResponse.set(featureConfigResponse);
+                            }
+                        });
+                log.info("completed getValue with response {}, {}, {}, {}", featureKey, sessionType, brand, shopId);
+                return featureConfigFinalResponse.get();
+            }
         }
         return null;
     }
@@ -100,6 +104,26 @@ public class FeatureConfigUtility {
             return ndpTriggerFieldList.contains(triggerType) ? Long.valueOf(featureConfigResponse.getValue()) : null;
         }
         return null;
+    }
+
+    public boolean checkFeatureEnable(String featureKey) {
+        log.info("started checkFeatureEnable method with : {}", featureKey);
+        List<FeatureConfigResponse> featureConfigResponses = retailConfigService.getFeatureConfigResponse();
+        List<FeatureConfigResponse> featureLevelList = featureConfigResponses.stream()
+                .filter(feature -> (featureKey.equalsIgnoreCase(feature.getFeatureKey())
+                        && Boolean.parseBoolean(feature.getIsEnabled())))
+                .collect(Collectors.toList());
+        AtomicBoolean canPoll = new AtomicBoolean(false);
+        if (!CollectionUtils.isEmpty(featureLevelList)) {
+            featureLevelList.stream().forEach(feature -> {
+                    boolean isAllBrands = "ALL".equalsIgnoreCase(feature.getBrand());
+                    if ((!isAllBrands && !CollectionUtils.isEmpty(feature.getShopIds())) || isAllBrands) {
+                        canPoll.set(true);
+                    }
+            });
+        }
+        log.info("completed checkFeatureEnable method with : {} and enable : {} ", featureKey, canPoll.get());
+        return canPoll.get();
     }
 
 }
