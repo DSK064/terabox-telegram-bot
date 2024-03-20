@@ -126,4 +126,18 @@ public class FeatureConfigUtility {
         return canPoll.get();
     }
 
+    /**
+     * This utility method is to get threshold value configured in double value for the ShopId and brand based on feature key and session type
+     * @param featureKey - requires feature key name from retail config service feature keys ex : ndp_add_funds_key etc..
+     * @param sessionType - requires Session type value ex : NDP (Anonymous,LoggedIn) , ALL
+     * @param brand - Brand name
+     * @param shopId - Shop Id
+     * @return Feature Config response from retail config service
+     */
+    public Double getDoubleConfig(String featureKey, String sessionType, String brand, String shopId) {
+        FeatureConfigResponse featureConfigResponse = getValue(featureKey, sessionType, brand, shopId);
+        return featureConfigResponse != null && !featureConfigResponse.getValue().equalsIgnoreCase("N/A")
+                ? Double.valueOf(featureConfigResponse.getValue()) : null;
+    }
+
 }
