@@ -49,11 +49,12 @@ public class RetailConfigServiceTest {
         UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromUriString(retailConfigServiceUrl);
         when(webClient.get()).thenReturn(requestHeadersUriSpec);
         when(requestHeadersUriSpec.uri(uriBuilder.build().toUri())).thenReturn(requestHeadersSpec);
-        when(requestHeadersSpec.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)).thenReturn(requestHeadersSpec);
+        when(requestHeadersSpec.header(anyString(), anyString())).thenReturn(requestHeadersSpec);
         when(requestHeadersSpec.accept(MediaType.APPLICATION_JSON)).thenReturn(requestHeadersSpec);
         when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
         when(responseSpec.bodyToMono(new ParameterizedTypeReference<List<FeatureConfigResponse>>() {})).thenReturn(Mono.just(expectedResponse));
         retailConfigService.setRetailConfigServiceUrl(retailConfigServiceUrl);
+        retailConfigService.setFeatureKeys("auto_vt_key,shop_alert_key");
         List<FeatureConfigResponse> result = retailConfigService.getFeatureConfigResponse();
         assertEquals(expectedResponse, result);
     }

@@ -109,21 +109,24 @@ public class FeatureConfigUtility {
     public boolean checkFeatureEnable(String featureKey) {
         log.info("started checkFeatureEnable method with : {}", featureKey);
         List<FeatureConfigResponse> featureConfigResponses = retailConfigService.getFeatureConfigResponse();
-        List<FeatureConfigResponse> featureLevelList = featureConfigResponses.stream()
-                .filter(feature -> (featureKey.equalsIgnoreCase(feature.getFeatureKey())
-                        && Boolean.parseBoolean(feature.getIsEnabled())))
-                .collect(Collectors.toList());
-        AtomicBoolean canPoll = new AtomicBoolean(false);
-        if (!CollectionUtils.isEmpty(featureLevelList)) {
-            featureLevelList.stream().forEach(feature -> {
+        if (!CollectionUtils.isEmpty(featureConfigResponses)) {
+            List<FeatureConfigResponse> featureLevelList = featureConfigResponses.stream()
+                    .filter(feature -> (featureKey.equalsIgnoreCase(feature.getFeatureKey())
+                            && Boolean.parseBoolean(feature.getIsEnabled())))
+                    .collect(Collectors.toList());
+            AtomicBoolean canPoll = new AtomicBoolean(false);
+            if (!CollectionUtils.isEmpty(featureLevelList)) {
+                featureLevelList.stream().forEach(feature -> {
                     boolean isAllBrands = "ALL".equalsIgnoreCase(feature.getBrand());
                     if ((!isAllBrands && !CollectionUtils.isEmpty(feature.getShopIds())) || isAllBrands) {
                         canPoll.set(true);
                     }
-            });
+                });
+            }
+            log.info("completed checkFeatureEnable method with : {} and enable : {} ", featureKey, canPoll.get());
+            return canPoll.get();
         }
-        log.info("completed checkFeatureEnable method with : {} and enable : {} ", featureKey, canPoll.get());
-        return canPoll.get();
+        return false;
     }
 
     /**

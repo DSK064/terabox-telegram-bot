@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import org.springframework.web.util.UriComponentsBuilder;
+
 import java.util.List;
 
 @Service
@@ -28,6 +29,9 @@ public class RetailConfigService {
     @Value("${retail.config.service.url}")
     private String retailConfigServiceUrl ;
 
+    @Value("${service.level.featureKeys}")
+    private String featureKeys;
+
     /**
      * This is the aggregate method to get list of all feature configs shop list from retail config service
      * Based on parent scheduler cron job value this cache get refreshed and get updated from retail service
@@ -38,10 +42,13 @@ public class RetailConfigService {
         List<FeatureConfigResponse> systemConfigResponses = null;
         try {
             UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(retailConfigServiceUrl);
-            log.info("getFeatureConfigResponse from retail config service started with endpoint = {}", retailConfigServiceUrl);
-            systemConfigResponses = webClient.get().uri(builder.build().toUri()).header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE).accept(MediaType.APPLICATION_JSON)
+            log.info("getFeatureConfigResponse from retail config service started with endpoint = {} &"
+                    + "feature keys = {}", retailConfigServiceUrl, featureKeys);
+            systemConfigResponses = webClient.get().uri(builder.build().toUri()).header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                    .header("featureKeys", featureKeys)
+                    .accept(MediaType.APPLICATION_JSON)
                     .retrieve().bodyToMono(new ParameterizedTypeReference<List<FeatureConfigResponse>>() {}).block();
-            log.info("getFeatureConfigResponse from retail config service completed  with response ");
+            log.info("getFeatureConfigResponse from retail config service completed.");
             return systemConfigResponses;
         } catch (WebClientResponseException wcre) {
             log.error("getFeatureConfigResponse from retail config service with error {} ", wcre.getResponseBodyAsString(), wcre);
