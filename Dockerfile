@@ -18,8 +18,7 @@
 #ENV JAVA_XMX "2g"
 #CMD java -Xms$JAVA_XMS -Xmx$JAVA_XMX $JAVA_OPTS -jar app.jar
 
-# FROM lcgomnia-docker-local.dev.docker.env.works/base-images/maven-service-appd
-FROM lcgomnia-docker-local.dev.docker.env.works/base-images/maven-jdk17-service-appd:latest
+FROM lcgomnia-docker-local.dev.docker.env.works/base-images/maven-service-appd
 ARG APP=example
 ARG VERSION=0.0.4
 ADD target/${APP}-${VERSION}-SNAPSHOT.jar  app.jar
