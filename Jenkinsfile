@@ -4,7 +4,7 @@ pipeline {
   }
   tools {
     maven 'Maven_3.6.3'
-    jdk 'jdk11'
+    jdk 'jdk17'
   }
 	options {
     buildDiscarder(logRotator(numToKeepStr: '10', artifactNumToKeepStr: '10'))
@@ -65,19 +65,19 @@ pipeline {
 //          junit "**/*-reports/*.xml"
       }
     }
-    stage("Dependency Check - findbugs report") {
+    /*stage("Dependency Check - findbugs report") {
         steps {
              script {
                last_started = env.STAGE_NAME
              }
              unstash 'app'
              //dependencyCheckPublisher canComputeNew: false, defaultEncoding: '', healthy: '', pattern: '', unHealthy: '', canRunOnFailed: true
-             //jacoco(path: '**/target/jacoco.exec')
-             jacoco(execPattern: '**/target/jacoco.exec')
-             //junit testResults: '**/target/*-reports/TEST-*.xml'
+             //jacoco(path: '**//*target/jacoco.exec')
+             jacoco(execPattern: '**//*target/jacoco.exec')
+             //junit testResults: '**//*target*//*-reports/TEST-*.xml'
 
         }
-    }  
+    }*/
     stage("Publish"){
       agent {
           label "infra"
