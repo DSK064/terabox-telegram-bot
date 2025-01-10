@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.ZonedDateTime;
 import java.util.Set;
 
 @NoArgsConstructor
@@ -19,4 +20,5 @@ public class FeatureConfigResponse {
     private String value;
     private Set<String> shopIds;
     private String ndpTriggerField;
+    private ZonedDateTime lastUpdatedTime;
 }

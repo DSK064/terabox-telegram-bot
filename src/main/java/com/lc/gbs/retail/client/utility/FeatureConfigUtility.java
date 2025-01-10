@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
+import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -70,6 +71,22 @@ public class FeatureConfigUtility {
         FeatureConfigResponse featureConfigResponse = getValue(featureKey, sessionType, brand, shopId);
         return featureConfigResponse != null ? Boolean.parseBoolean(featureConfigResponse.getIsEnabled()) : false;
     }
+
+    /**
+     * This utility method is to check feature is enabled or not for the ShopId and brand based on feature key and session type
+     * If the eventStartTime is before the system config last_updated_time, then return false else return true
+     * @param featureKey - requires feature key name from retail config service feature keys ex : ndp_add_funds_key etc..
+     * @param sessionType - requires Session type value ex : NDP (Anonymous,LoggedIn) , ALL
+     * @param brand - Brand name
+     * @param shopId - Shop Id
+     * @param eventStartTime  - the time when a particular event started
+     * @return Feature Config response from retail config service
+     */
+    public boolean getBooleanConfig(String featureKey, String sessionType, String brand, String shopId, ZonedDateTime eventStartTime) {
+        FeatureConfigResponse featureConfigResponse = getValue(featureKey, sessionType, brand, shopId);
+        return featureConfigResponse != null ? (Boolean.parseBoolean(featureConfigResponse.getIsEnabled()) && eventStartTime.isAfter(featureConfigResponse.getLastUpdatedTime())) : false;
+    }
+
 
     /**
      * This utility method is to get threshold value configured for the ShopId and brand based on feature key and session type

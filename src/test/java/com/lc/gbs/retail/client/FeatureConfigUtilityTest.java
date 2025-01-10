@@ -9,6 +9,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -41,6 +43,12 @@ public class FeatureConfigUtilityTest {
         assertEquals(300,featureConfigUtility.getNumberConfig("ndp_funds_key","Anonymous","LADBROKEUK","1005"));
         assertEquals(null,featureConfigUtility.getNumberConfig("ndp_funds_key","Anonymous","LADBROKEUK","1001","Physical Cash"));
         assertEquals(150,featureConfigUtility.getNumberConfig("ndp_funds_key","Anonymous","LADBROKEUK","2004","Physical Cash"));
+        assertEquals(false, featureConfigUtility.getBooleanConfig("payment_tracking","ALL","LADBROKEUK","2024", ZonedDateTime.of(
+                2024, 11, 3, 12, 20, 59,
+                90000, ZoneId.systemDefault())));
+        assertEquals(true, featureConfigUtility.getBooleanConfig("payment_tracking","ALL","LADBROKEUK","2024", ZonedDateTime.of(
+                2024, 12, 25, 12, 20, 59,
+                90000, ZoneId.systemDefault())));
     }
 
     @Test
@@ -134,6 +142,18 @@ public class FeatureConfigUtilityTest {
                 .value("N/A")
                 .build();
         featureConfigResponseList.add(featureConfigResponse6);
+        FeatureConfigResponse featureConfigResponse7 = FeatureConfigResponse.builder()
+                .featureKey("payment_tracking")
+                .brand("ALL")
+                .sessionType("ALL")
+                .isEnabled("TRUE")
+                .value(null)
+                .shopIds(new HashSet<>(){{add("2024");}})
+                .lastUpdatedTime(ZonedDateTime.of(
+                        2024, 12, 3, 12, 20, 59,
+                        90000, ZoneId.systemDefault()))
+                .build();
+        featureConfigResponseList.add(featureConfigResponse7);
         return featureConfigResponseList;
     }
 
