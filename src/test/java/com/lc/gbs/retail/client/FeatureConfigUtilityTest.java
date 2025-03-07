@@ -18,6 +18,7 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -155,6 +156,58 @@ public class FeatureConfigUtilityTest {
                 .build();
         featureConfigResponseList.add(featureConfigResponse7);
         return featureConfigResponseList;
+    }
+
+    @Test
+    void testGetJsonConfigWithFeatureKeyWithBrand() {
+        record PresetConfig(String name, String brand, int order, Criteria criteria) {
+            record Criteria(List<String> category,List<String> typeIds, List<String> typeNames, String typeNamesInclude) {}
+        }
+        String jsonValue = """ 
+                {
+                		"name": "SIS Virtuals",
+                		"brand": "LADBROKES",
+                		"order": 6,
+                		"criteria": {
+                			"category": [
+                				"Greyhound Racing",
+                				"Horse Racing"
+                			],
+                			"typeIds": [
+                				"virtual"
+                			],
+                			"typeNames": [
+                				"Portman Park",
+                				"Sprint Valley",
+                				"Steepledowns",
+                				"Brushwood",
+                				"Millersfield"
+                			],
+                			"typeNamesInclude": "INCLUDE"
+                		}
+                	}
+                """;
+        ArrayList<FeatureConfigResponse> featureConfigResponseList = new ArrayList<>();
+        FeatureConfigResponse.FeatureConfigResponseBuilder featureKeyResult = FeatureConfigResponse.builder()
+                .brand("LADBROKES")
+                .featureKey("preset_config_key");
+        FeatureConfigResponse.FeatureConfigResponseBuilder sessionTypeResult = featureKeyResult
+                .lastUpdatedTime(ZonedDateTime.now())
+                .ndpTriggerField("false")
+                .sessionType("ALL");
+        FeatureConfigResponse buildResult = sessionTypeResult.shopIds(new HashSet<>()).value(jsonValue).build();
+        featureConfigResponseList.add(buildResult);
+        when(retailConfigService.getFeatureConfigResponse()).thenReturn(featureConfigResponseList);
+        Class<PresetConfig> classType = PresetConfig.class;
+
+        // Act
+        List<PresetConfig> actualJsonConfig = featureConfigUtility.getJsonConfigs("preset_config_key", "ALL", "LADBROKES",
+                classType);
+
+        // Assert
+        verify(retailConfigService).getFeatureConfigResponse();
+        assertEquals(1,actualJsonConfig.size());
+        assertTrue( actualJsonConfig.get(0).criteria().category().contains("Greyhound Racing"));
     }
 
 }
