@@ -21,6 +21,6 @@
 # FROM lcgomnia-docker-local.dev.docker.env.works/base-images/maven-service-appd
 FROM lcgomnia-docker-local.dev.docker.env.works/base-images/maven-jdk17-service-appd:latest
 ARG APP=example
-ARG VERSION=0.0.4
+ARG VERSION=0.0.5
 ADD target/${APP}-${VERSION}-SNAPSHOT.jar  app.jar
 ENV NEW_RELIC_APP_NAME LC-CRE-DO-EXAMPLE-DEV
