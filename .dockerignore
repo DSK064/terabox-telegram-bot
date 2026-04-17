@@ -1,0 +1,7 @@
+.env
+.git
+.idea
+__pycache__
+*.pyc
+.github
+gha-creds-*.json

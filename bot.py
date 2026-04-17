@@ -257,7 +257,22 @@ def main():
         port = int(os.getenv("PORT", "8080"))
         webhook_url = os.getenv("WEBHOOK_URL", "")
         if not webhook_url:
-            raise ValueError("WEBHOOK_URL must be set in webhook mode")
+            # On first deploy, WEBHOOK_URL isn't set yet.
+            # Start a minimal HTTP server so Cloud Run health check passes.
+            logger.warning("WEBHOOK_URL not set — starting placeholder server on port %s", port)
+            from http.server import HTTPServer, BaseHTTPRequestHandler
+
+            class HealthHandler(BaseHTTPRequestHandler):
+                def do_GET(self):
+                    self.send_response(200)
+                    self.end_headers()
+                    self.wfile.write(b"OK - waiting for WEBHOOK_URL")
+                def log_message(self, *args):
+                    pass
+
+            HTTPServer(("0.0.0.0", port), HealthHandler).serve_forever()
+            return
+
         logger.info(f"Bot starting in WEBHOOK mode on port {port}")
         app.run_webhook(
             listen="0.0.0.0",

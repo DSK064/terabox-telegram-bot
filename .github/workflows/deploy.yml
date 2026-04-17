@@ -21,6 +21,7 @@ jobs:
         uses: google-github-actions/setup-gcloud@v2
 
       - name: Deploy to Cloud Run
+        id: deploy
         uses: google-github-actions/deploy-cloudrun@v2
         with:
           service: terabox-bot
@@ -31,9 +32,8 @@ jobs:
             BOT_TOKEN=${{ secrets.BOT_TOKEN }}
             TERABOX_COOKIE=${{ secrets.TERABOX_COOKIE }}
 
-      - name: Set webhook URL
+      - name: Update webhook URL
         run: |
-          SERVICE_URL=$(gcloud run services describe terabox-bot --region us-central1 --format 'value(status.url)')
           gcloud run services update terabox-bot \
             --region us-central1 \
-            --update-env-vars "WEBHOOK_URL=${SERVICE_URL}"
+            --update-env-vars "WEBHOOK_URL=${{ steps.deploy.outputs.url }}"
