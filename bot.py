@@ -26,7 +26,7 @@ from telegram.ext import (
 
 from terabox import get_download_info, is_terabox_url
 
-load_dotenv()
+load_dotenv(override=False)
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 TERABOX_COOKIE = os.getenv("TERABOX_COOKIE", "")
@@ -277,6 +277,7 @@ def main():
         app.run_webhook(
             listen="0.0.0.0",
             port=port,
+            url_path="/",
             webhook_url=webhook_url,
             allowed_updates=Update.ALL_TYPES,
         )
