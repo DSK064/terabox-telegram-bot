@@ -238,7 +238,7 @@ async def handle_non_link(update: Update, context: ContextTypes.DEFAULT_TYPE):
             )
 
 
-def main():
+def build_app() -> Application:
     app = Application.builder().token(BOT_TOKEN).build()
     app.add_handler(CommandHandler("start", start_command))
     app.add_handler(CommandHandler("help", help_command))
@@ -246,9 +246,28 @@ def main():
         filters.TEXT & filters.Regex(TERABOX_URL_PATTERN), handle_terabox_link,
     ))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_non_link))
+    return app
 
-    logger.info("Bot started! Waiting for TeraBox links...")
-    app.run_polling(allowed_updates=Update.ALL_TYPES)
+
+def main():
+    mode = os.getenv("MODE", "polling").lower()
+    app = build_app()
+
+    if mode == "webhook":
+        port = int(os.getenv("PORT", "8080"))
+        webhook_url = os.getenv("WEBHOOK_URL", "")
+        if not webhook_url:
+            raise ValueError("WEBHOOK_URL must be set in webhook mode")
+        logger.info(f"Bot starting in WEBHOOK mode on port {port}")
+        app.run_webhook(
+            listen="0.0.0.0",
+            port=port,
+            webhook_url=webhook_url,
+            allowed_updates=Update.ALL_TYPES,
+        )
+    else:
+        logger.info("Bot started in POLLING mode! Waiting for TeraBox links...")
+        app.run_polling(allowed_updates=Update.ALL_TYPES)
 
 
 if __name__ == "__main__":
