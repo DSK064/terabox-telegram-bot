@@ -120,10 +120,11 @@ async def handle_terabox_link(update: Update, context: ContextTypes.DEFAULT_TYPE
     if not url:
         return
 
+    logger.info(f"Received TeraBox link: {url} (from user: {update.message.from_user.id})")
     status_msg = await update.message.reply_text("🔍 Fetching file info from TeraBox...")
 
     try:
-        loop = asyncio.get_event_loop()
+        loop = asyncio.get_running_loop()
         file_info = await loop.run_in_executor(
             None, lambda: get_download_info(url, TERABOX_COOKIE)
         )
@@ -172,7 +173,7 @@ async def handle_terabox_link(update: Update, context: ContextTypes.DEFAULT_TYPE
         tmp_dir = tempfile.mkdtemp(prefix="terabox_")
         try:
             file_path = os.path.join(tmp_dir, file_name)
-            success = await loop.run_in_executor(
+            success = await asyncio.get_running_loop().run_in_executor(
                 None, lambda: download_file(download_link, file_path)
             )
 
@@ -253,6 +254,5 @@ def main():
 if __name__ == "__main__":
     import sys
     if sys.version_info >= (3, 14):
-        import asyncio
         asyncio.set_event_loop(asyncio.new_event_loop())
     main()

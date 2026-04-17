@@ -7,7 +7,7 @@ A Telegram bot that downloads videos/files from TeraBox share links and sends th
 - Shows file info (name, size, thumbnail) before downloading
 - Supports all TeraBox share URL formats
 - Progress updates during download
-- 2GB Telegram file size limit enforced
+- 50MB Telegram file size limit enforced (Bot API limit)
 
 ## Setup
 
